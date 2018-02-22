@@ -38,7 +38,7 @@ OPTIONS = {
 }
 
 -- Uses editorconfig-core-lua's as yet unreleased iterator API
---function ec_iter(p) do
+--function ec_iter(p)
 --  return ec.open(p)
 --end
 
@@ -59,6 +59,9 @@ function ec_set_values(path)
   if path then
     for name, value in ec_iter(path) do
       if OPTIONS[name] then
+        if type(value) == "userdata" then
+          value = tostring(value)
+        end
         OPTIONS[name](value)
       end
     end
