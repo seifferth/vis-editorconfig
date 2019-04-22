@@ -1,5 +1,5 @@
 require "vis"
-ec = require "editorconfig_core"
+ec = require "editorconfig"
 
 -- Simple wrapper
 function vis_set(option, value)
@@ -16,7 +16,7 @@ end
 
 OPTIONS = {
   indent_style = function (value)
-    vis_set("expandtab", (value == ec.T.INDENT_STYLE_SPACE))
+    vis_set("expandtab", (value == ec.INDENT_STYLE_SPACE))
   end,
 
   indent_size = function (value)
