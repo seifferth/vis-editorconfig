@@ -68,5 +68,5 @@ vis.events.subscribe(vis.events.FILE_OPEN, function (file)
 end)
 
 vis.events.subscribe(vis.events.FILE_SAVE_POST, function (file, path)
-  ec_set_values(path)
+  ec_set_values(file.path)
 end)
