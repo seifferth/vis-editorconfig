@@ -16,7 +16,7 @@ end
 
 OPTIONS = {
   indent_style = function (value)
-    vis_set("expandtab", (value == ec.INDENT_STYLE_SPACE))
+    vis_set("expandtab", (value == "space"))
   end,
 
   indent_size = function (value)
