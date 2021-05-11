@@ -36,7 +36,7 @@ function insert_final_newline(file, path)
   -- therefore respect edconf_hooks_enabled. Since this function runs
   -- blazingly fast and scales with a complexity of O(1), however,
   -- there is no need to disable it.
-  if file:content(file.size-1, file.size) ~= '\n' then
+  if file:content(file.size-1, 1) ~= '\n' then
     file:insert(file.size, '\n')
   end
 end
