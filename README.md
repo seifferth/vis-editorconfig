@@ -13,4 +13,4 @@ You'll need the Lua wrapper for editorconfig-core installed. This can be done th
 git clone https://github.com/vktec/vis-editorconfig "$HOME/.config/vis/editorconfig"
 ```
 
-Then add `require "editorconfig/editorconfig"` to your `visrc.lua`.
+Then add `require "editorconfig/edconf"` to your `visrc.lua`.

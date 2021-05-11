@@ -1,5 +1,5 @@
 require "vis"
-ec = require "editorconfig_core"
+ec = require "editorconfig"
 
 -- Simple wrapper
 function vis_set(option, value)
@@ -16,7 +16,7 @@ end
 
 OPTIONS = {
   indent_style = function (value)
-    vis_set("expandtab", (value == ec.T.INDENT_STYLE_SPACE))
+    vis_set("expandtab", (value == "space"))
   end,
 
   indent_size = function (value)
@@ -37,12 +37,7 @@ OPTIONS = {
   --   max_line_length
 }
 
--- Uses editorconfig-core-lua's as yet unreleased iterator API
---function ec_iter(p) do
---  return ec.open(p)
---end
-
--- Compatible with editorconfig-core-lua v0.1.1
+-- Compatible with editorconfig-core-lua v0.3.0
 function ec_iter(p)
   i = 0
   props, keys = ec.parse(p)
