@@ -41,6 +41,16 @@ function insert_final_newline(file, path)
   end
 end
 
+function strip_final_newline(file, path)
+  -- In theory, this would have a complexity of O(n) as well and could
+  -- thus be made optional via edconf_hooks_enabled. On the other hand,
+  -- this is probably a very rare edge case, so stripping all trailing
+  -- newline characters is probably safe enough.
+  while file:content(file.size-1, 1) == '\n' do
+    file:delete(file.size-1, 1)
+  end
+end
+
 function trim_trailing_whitespace(file, path)
   if not edconf_hooks_enabled then return end
   for i=1, #file.lines do
@@ -107,7 +117,20 @@ OPTIONS = {
   end,
 
   insert_final_newline = function (value)
-    set_pre_save(insert_final_newline, value)
+    -- According to the editorconfig specification, insert_final_newline
+    -- false is supposed to mean stripping the final newline, if present.
+    -- See https://editorconfig-specification.readthedocs.io/#supported-pairs
+    --
+    -- Quote: insert_final_newline Set to true ensure file ends with a
+    -- newline when saving and false to ensure it doesn’t.
+    --
+    if value == "true" then
+      set_pre_save(insert_final_newline, "true")
+      set_pre_save(strip_final_newline, "false")
+    elseif value == "false" then
+      set_pre_save(strip_final_newline, "true")
+      set_pre_save(insert_final_newline, "false")
+    end
   end,
 
   trim_trailing_whitespace = function (value)
