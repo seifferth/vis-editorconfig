@@ -124,13 +124,8 @@ OPTIONS = {
     -- Quote: insert_final_newline Set to true ensure file ends with a
     -- newline when saving and false to ensure it doesn’t.
     --
-    if value == "true" then
-      set_pre_save(insert_final_newline, "true")
-      set_pre_save(strip_final_newline, "false")
-    elseif value == "false" then
-      set_pre_save(strip_final_newline, "true")
-      set_pre_save(insert_final_newline, "false")
-    end
+    set_pre_save(insert_final_newline, tostring(value == "true"))
+    set_pre_save(strip_final_newline, tostring(value == "false"))
   end,
 
   trim_trailing_whitespace = function (value)
