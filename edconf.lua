@@ -32,12 +32,17 @@ end
 
 -- Custom functionality
 function insert_final_newline(file, path)
+  -- Technically speaking, this is a pre-save-hook as well and could
+  -- therefore respect edconf_hooks_enabled. Since this function runs
+  -- blazingly fast and scales with a complexity of O(1), however,
+  -- there is no need to disable it.
   if file:content(file.size-1, file.size) ~= '\n' then
     file:insert(file.size, '\n')
   end
 end
 
 function trim_trailing_whitespace(file, path)
+  if not edconf_hooks_enabled then return end
   for i=1, #file.lines do
     if string.match(file.lines[i], '[ \t]$') then
       file.lines[i] = string.gsub(file.lines[i], '[ \t]*$', '')
@@ -46,6 +51,7 @@ function trim_trailing_whitespace(file, path)
 end
 
 function enforce_crlf_eol(file, path)
+  if not edconf_hooks_enabled then return end
   for i=1, #file.lines do
     if not string.match(file.lines[i], '\r$') then
       file.lines[i] = string.gsub(file.lines[i], '$', '\r')
@@ -54,6 +60,7 @@ function enforce_crlf_eol(file, path)
 end
 
 function enforce_lf_eol(file, path)
+  if not edconf_hooks_enabled then return end
   for i=1, #file.lines do
     if string.match(file.lines[i], '\r$') then
       file.lines[i] = string.gsub(file.lines[i], '\r$', '')
@@ -65,6 +72,7 @@ global_max_line_length = 80     -- This is ugly, but we do want to use
                                 -- single function that we can register
                                 -- or unregister as needed
 function max_line_length(file, path)
+  if not edconf_hooks_enabled then return end
   local overlong_lines = {}
   for i=1, #file.lines do
     if string.len(file.lines[i]) > global_max_line_length then
@@ -166,4 +174,9 @@ end)
 
 vis.events.subscribe(vis.events.FILE_SAVE_POST, function (file, path)
   ec_set_values(file.path)
+end)
+
+edconf_hooks_enabled = false
+vis:option_register("edconfhooks", "bool", function(value)
+  edconf_hooks_enabled = value
 end)
