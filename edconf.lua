@@ -197,4 +197,4 @@ end)
 edconf_hooks_enabled = false
 vis:option_register("edconfhooks", "bool", function(value)
   edconf_hooks_enabled = value
-end)
+end, "Enable optional pre-save-hooks for certain editorconfig settings")
