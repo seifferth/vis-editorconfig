@@ -176,7 +176,9 @@ end
 function ec_set_values(path)
   if path then
     for name, value in ec_iter(path) do
-      if OPTIONS[name] then
+      if name:sub(1,4) == "vis_" then
+        vis_set(name:sub(5,#name), value)
+      elseif OPTIONS[name] then
         OPTIONS[name](value)
       end
     end
