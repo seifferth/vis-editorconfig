@@ -29,6 +29,12 @@ plugin. At this moment, there is full support for the following settings:
 The following settings are implemented partially and / or support is
 turned off by default:
 
+- spell_language: This is not yet part of the editorconfig specification
+  (cf. <https://github.com/editorconfig/editorconfig/issues/315>), but
+  it is implemented anyway. Since vis does not support spellchecking
+  natively, this plugin will only set `vis.win.file.spell_language` to
+  the specified value. It is then up to the spellchecking plugin to
+  respect that variable.
 - trim_trailing_whitespace: Turned off by default, can be enabled
   via `:set edconfhooks on`.
 - end_of_line: Turned off by default, partial support can be enabled

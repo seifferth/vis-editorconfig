@@ -116,6 +116,10 @@ OPTIONS = {
     vis_set("tabwidth", value)
   end,
 
+  spell_language = function (value, file)
+    file.spell_language = value
+  end,
+
   insert_final_newline = function (value)
     -- According to the editorconfig specification, insert_final_newline
     -- false is supposed to mean stripping the final newline, if present.
@@ -173,27 +177,27 @@ function ec_iter(p)
   end
 end
 
-function ec_set_values(path)
-  if path then
-    for name, value in ec_iter(path) do
+function ec_set_values(file)
+  if file.path then
+    for name, value in ec_iter(file.path) do
       if name:sub(1,4) == "vis_" then
         vis_set(name:sub(5,#name), value)
       elseif OPTIONS[name] then
-        OPTIONS[name](value)
+        OPTIONS[name](value, file)
       end
     end
   end
 end
 
-function ec_parse_cmd() ec_set_values(vis.win.file.path) end
+function ec_parse_cmd() ec_set_values(vis.win.file) end
 vis:command_register("econfig_parse", ec_parse_cmd, "(Re)parse an editorconfig file")
 
 vis.events.subscribe(vis.events.FILE_OPEN, function (file)
-  ec_set_values(file.path)
+  ec_set_values(file)
 end)
 
 vis.events.subscribe(vis.events.FILE_SAVE_POST, function (file, path)
-  ec_set_values(file.path)
+  ec_set_values(file)
 end)
 
 edconf_hooks_enabled = false
