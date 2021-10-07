@@ -80,28 +80,3 @@ import in `visrc.lua`:
     require('editorconfig/edconf')
     vis:command('set edconfhooks on')   -- supposing you did previously
                                         -- require('vis')
-
-### Setting arbitrary options
-
-To some it might be convenient to use editorconfig files to set arbitrary
-vis options. Therefore, the vis editorconfig plugin uses the `vis_`
-prefix in keys as an interface to anything that can be specified with
-`:set`.
-
-Instead of running `:set spelllang en_US` after opening a file, for
-instance, one can also add
-
-    vis_spelllang = en_US
-
-to the appropriate section of an editorconfig file.
-
-Note that keys in editorconfig are case-insensitive. The specification
-suggests to lowercase them. Therefore, it is only possible to use this
-mechanism for lowercase options. If you really need to use upper or
-camel case options, add an alias to your `visrc.lua`:
-
-```lua
-vis:option_register("snake_case_option", "string", function(value)
-  vis:command("set camelCaseOption " .. value)
-end, "Alias for camelCaseOption")
-```

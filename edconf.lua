@@ -178,11 +178,9 @@ function ec_iter(p)
 end
 
 function ec_set_values(file)
-  if file.path then
+  if path then
     for name, value in ec_iter(file.path) do
-      if name:sub(1,4) == "vis_" then
-        vis_set(name:sub(5,#name), value)
-      elseif OPTIONS[name] then
+      if OPTIONS[name] then
         OPTIONS[name](value, file)
       end
     end
