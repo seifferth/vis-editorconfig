@@ -178,7 +178,7 @@ function ec_iter(p)
 end
 
 function ec_set_values(file)
-  if path then
+  if file.path then
     for name, value in ec_iter(file.path) do
       if OPTIONS[name] then
         OPTIONS[name](value, file)
