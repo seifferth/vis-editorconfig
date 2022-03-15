@@ -11,10 +11,17 @@ You'll need the Lua wrapper for editorconfig-core installed. This can
 be done through luarocks: `luarocks install editorconfig-core`
 
 ```shell
-git clone https://github.com/seifferth/vis-editorconfig "$HOME/.config/vis/editorconfig"
+git clone https://github.com/seifferth/vis-editorconfig "$HOME/.config/vis/edconf"
 ```
 
-Then add `require('editorconfig/edconf')` to your `visrc.lua`.
+Then add `require('edconf')` to your `visrc.lua`.
+
+You may use a different name for the local repository, if you like.
+You could, for instance, use `$HOME/.config/vis/vis-editorconfig` and
+`require('vis-editorconfig')`.  Note, however, that the repository **must
+not** be called `editorconfig`.  Since the editorconfig-core lua library
+is also called `editorconfig`, naming the repository `editorconfig`
+will cause name conflicts that result in infinite recursion.
 
 ## Functionality
 
