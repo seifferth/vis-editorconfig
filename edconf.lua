@@ -116,8 +116,8 @@ OPTIONS = {
     vis_set("tabwidth", value)
   end,
 
-  spell_language = function (value, file)
-    file.spell_language = value
+  spelling_language = function (value, file)
+    file.spelling_language = value
   end,
 
   insert_final_newline = function (value)
