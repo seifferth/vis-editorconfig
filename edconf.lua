@@ -37,7 +37,7 @@ vis:option_register("edconfhooks", "bool", function(value)
   M.hooks_enabled = value
 end, "Enable optional pre-save-hooks for certain editorconfig settings")
 
-local function insert_final_newline(file, path)
+local function insert_final_newline(file)
   -- Technically speaking, this is a pre-save-hook as well and could
   -- therefore respect edconf_hooks_enabled. Since this function runs
   -- blazingly fast and scales with a complexity of O(1), however,
@@ -47,7 +47,7 @@ local function insert_final_newline(file, path)
   end
 end
 
-local function strip_final_newline(file, path)
+local function strip_final_newline(file)
   -- In theory, this would have a complexity of O(n) as well and could
   -- thus be made optional via edconf_hooks_enabled. On the other hand,
   -- this is probably a very rare edge case, so stripping all trailing
@@ -57,7 +57,7 @@ local function strip_final_newline(file, path)
   end
 end
 
-local function trim_trailing_whitespace(file, path)
+local function trim_trailing_whitespace(file)
   if not M.hooks_enabled then return end
   for i=1, #file.lines do
     if string.match(file.lines[i], '[ \t]$') then
@@ -66,7 +66,7 @@ local function trim_trailing_whitespace(file, path)
   end
 end
 
-local function enforce_crlf_eol(file, path)
+local function enforce_crlf_eol(file)
   if not M.hooks_enabled then return end
   for i=1, #file.lines do
     if not string.match(file.lines[i], '\r$') then
@@ -75,7 +75,7 @@ local function enforce_crlf_eol(file, path)
   end
 end
 
-local function enforce_lf_eol(file, path)
+local function enforce_lf_eol(file)
   if not M.hooks_enabled then return end
   for i=1, #file.lines do
     if string.match(file.lines[i], '\r$') then
@@ -87,7 +87,7 @@ end
 M.max_line_length = 80     -- This is ugly, but we do want to use
                            -- single function that we can register
                            -- or unregister as needed
-local function max_line_length(file, path)
+local function max_line_length(file)
   if not M.hooks_enabled then return end
   local overlong_lines = {}
   for i=1, #file.lines do
@@ -200,7 +200,7 @@ vis.events.subscribe(vis.events.FILE_OPEN, function (file)
   ec_set_values(file)
 end)
 
-vis.events.subscribe(vis.events.FILE_SAVE_POST, function (file, path)
+vis.events.subscribe(vis.events.FILE_SAVE_POST, function (file)
   ec_set_values(file)
 end)
 
