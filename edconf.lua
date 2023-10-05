@@ -108,20 +108,6 @@ local function max_line_length(file)
 end
 
 local OPTIONS = {
-  indent_style = function (value)
-    vis_set("expandtab", (value == "space"))
-  end,
-
-  indent_size = function (value)
-    if value ~= "tab" then -- tab_width is a synonym anyway
-      vis_set("tabwidth", value)
-    end
-  end,
-
-  tab_width = function (value)
-    vis_set("tabwidth", value)
-  end,
-
   spelling_language = function (value, file)
     file.spelling_language = value
   end,
@@ -170,6 +156,22 @@ local OPTIONS = {
   --   max_line_length
 }
 
+local WIN_OPTIONS = {
+  indent_style = function (value)
+    vis_set("expandtab", (value == "space"))
+  end,
+
+  indent_size = function (value)
+    if value ~= "tab" then -- tab_width is a synonym anyway
+      vis_set("tabwidth", value)
+    end
+  end,
+
+  tab_width = function (value)
+    vis_set("tabwidth", value)
+  end,
+}
+
 -- Compatible with editorconfig-core-lua v0.3.0
 local function ec_iter(p)
   local i = 0
@@ -193,11 +195,27 @@ local function ec_set_values(file)
   end
 end
 
-local function ec_parse_cmd() ec_set_values(vis.win.file) end
-vis:command_register("econfig_parse", ec_parse_cmd, "(Re)parse an editorconfig file")
+local function ec_set_win_values(win)
+  if not win or not win.file or not win.file.path then return end
+  for name, value in ec_iter(win.file.path) do
+    if WIN_OPTIONS[name] then
+      WIN_OPTIONS[name](value)
+    end
+  end
+end
+
+
+vis:command_register("econfig_parse", function()
+  ec_set_values(vis.win.file)
+  ec_set_win_values(vis.win)
+end, "(Re)parse an editorconfig file")
 
 vis.events.subscribe(vis.events.FILE_OPEN, function (file)
   ec_set_values(file)
+end)
+
+vis.events.subscribe(vis.events.WIN_OPEN, function (win)
+  ec_set_win_values(win)
 end)
 
 vis.events.subscribe(vis.events.FILE_SAVE_POST, function (file)
