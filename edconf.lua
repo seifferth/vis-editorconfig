@@ -1,5 +1,6 @@
 require "vis"
 local ec = require "editorconfig"
+local M = {}
 
 -- Simple wrapper
 local function vis_set(option, value)
@@ -31,6 +32,11 @@ local function set_file_open(f, value)
 end
 
 -- Custom functionality
+M.hooks_enabled = false
+vis:option_register("edconfhooks", "bool", function(value)
+  M.hooks_enabled = value
+end, "Enable optional pre-save-hooks for certain editorconfig settings")
+
 local function insert_final_newline(file, path)
   -- Technically speaking, this is a pre-save-hook as well and could
   -- therefore respect edconf_hooks_enabled. Since this function runs
@@ -52,7 +58,7 @@ local function strip_final_newline(file, path)
 end
 
 local function trim_trailing_whitespace(file, path)
-  if not edconf_hooks_enabled then return end
+  if not M.hooks_enabled then return end
   for i=1, #file.lines do
     if string.match(file.lines[i], '[ \t]$') then
       file.lines[i] = string.gsub(file.lines[i], '[ \t]*$', '')
@@ -61,7 +67,7 @@ local function trim_trailing_whitespace(file, path)
 end
 
 local function enforce_crlf_eol(file, path)
-  if not edconf_hooks_enabled then return end
+  if not M.hooks_enabled then return end
   for i=1, #file.lines do
     if not string.match(file.lines[i], '\r$') then
       file.lines[i] = string.gsub(file.lines[i], '$', '\r')
@@ -70,7 +76,7 @@ local function enforce_crlf_eol(file, path)
 end
 
 local function enforce_lf_eol(file, path)
-  if not edconf_hooks_enabled then return end
+  if not M.hooks_enabled then return end
   for i=1, #file.lines do
     if string.match(file.lines[i], '\r$') then
       file.lines[i] = string.gsub(file.lines[i], '\r$', '')
@@ -78,14 +84,14 @@ local function enforce_lf_eol(file, path)
   end
 end
 
-local global_max_line_length = 80     -- This is ugly, but we do want to use
-                                      -- single function that we can register
-                                      -- or unregister as needed
+M.max_line_length = 80     -- This is ugly, but we do want to use
+                           -- single function that we can register
+                           -- or unregister as needed
 local function max_line_length(file, path)
-  if not edconf_hooks_enabled then return end
+  if not M.hooks_enabled then return end
   local overlong_lines = {}
   for i=1, #file.lines do
-    if string.len(file.lines[i]) > global_max_line_length then
+    if string.len(file.lines[i]) > M.max_line_length then
       table.insert(overlong_lines, i)
     end
   end
@@ -95,7 +101,7 @@ local function max_line_length(file, path)
     end)(#overlong_lines)
     vis:info(string.format(
       "%d %s longer than %d characters: %s",
-      #overlong_lines, lines_are, global_max_line_length,
+      #overlong_lines, lines_are, M.max_line_length,
       table.concat(overlong_lines, ",")
     ))
   end
@@ -152,7 +158,7 @@ local OPTIONS = {
   -- length is set, we can at least issue a warning, however.
   max_line_length = function(value)
     if value ~= "off" then
-      global_max_line_length = tonumber(value)
+      M.max_line_length = tonumber(value)
     end
     set_pre_save(max_line_length, tostring(value ~= "off"))
   end,
@@ -198,7 +204,4 @@ vis.events.subscribe(vis.events.FILE_SAVE_POST, function (file, path)
   ec_set_values(file)
 end)
 
-edconf_hooks_enabled = false
-vis:option_register("edconfhooks", "bool", function(value)
-  edconf_hooks_enabled = value
-end, "Enable optional pre-save-hooks for certain editorconfig settings")
+return M
