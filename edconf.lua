@@ -166,9 +166,9 @@ OPTIONS = {
 
 -- Compatible with editorconfig-core-lua v0.3.0
 function ec_iter(p)
-  i = 0
-  props, keys = ec.parse(p)
-  n = #keys
+  local i = 0
+  local props, keys = ec.parse(p)
+  local n = #keys
   return function ()
     i = i + 1
     if i <= n then
