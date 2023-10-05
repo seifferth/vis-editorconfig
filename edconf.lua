@@ -1,8 +1,8 @@
 require "vis"
-ec = require "editorconfig"
+local ec = require "editorconfig"
 
 -- Simple wrapper
-function vis_set(option, value)
+local function vis_set(option, value)
   if type(value) == "boolean" then
     if value then
       value = "yes"
@@ -14,7 +14,7 @@ function vis_set(option, value)
   vis:command("set " .. option .. " " .. value)
 end
 
-function set_pre_save(f, value)
+local function set_pre_save(f, value)
   if value == "true" then
     vis.events.subscribe(vis.events.FILE_SAVE_PRE, f)
   else
@@ -22,7 +22,7 @@ function set_pre_save(f, value)
   end
 end
 
-function set_file_open(f, value)
+local function set_file_open(f, value)
   if value == "true" then
     vis.events.subscribe(vis.events.FILE_OPEN, f)
   else
@@ -31,7 +31,7 @@ function set_file_open(f, value)
 end
 
 -- Custom functionality
-function insert_final_newline(file, path)
+local function insert_final_newline(file, path)
   -- Technically speaking, this is a pre-save-hook as well and could
   -- therefore respect edconf_hooks_enabled. Since this function runs
   -- blazingly fast and scales with a complexity of O(1), however,
@@ -41,7 +41,7 @@ function insert_final_newline(file, path)
   end
 end
 
-function strip_final_newline(file, path)
+local function strip_final_newline(file, path)
   -- In theory, this would have a complexity of O(n) as well and could
   -- thus be made optional via edconf_hooks_enabled. On the other hand,
   -- this is probably a very rare edge case, so stripping all trailing
@@ -51,7 +51,7 @@ function strip_final_newline(file, path)
   end
 end
 
-function trim_trailing_whitespace(file, path)
+local function trim_trailing_whitespace(file, path)
   if not edconf_hooks_enabled then return end
   for i=1, #file.lines do
     if string.match(file.lines[i], '[ \t]$') then
@@ -60,7 +60,7 @@ function trim_trailing_whitespace(file, path)
   end
 end
 
-function enforce_crlf_eol(file, path)
+local function enforce_crlf_eol(file, path)
   if not edconf_hooks_enabled then return end
   for i=1, #file.lines do
     if not string.match(file.lines[i], '\r$') then
@@ -69,7 +69,7 @@ function enforce_crlf_eol(file, path)
   end
 end
 
-function enforce_lf_eol(file, path)
+local function enforce_lf_eol(file, path)
   if not edconf_hooks_enabled then return end
   for i=1, #file.lines do
     if string.match(file.lines[i], '\r$') then
@@ -78,10 +78,10 @@ function enforce_lf_eol(file, path)
   end
 end
 
-global_max_line_length = 80     -- This is ugly, but we do want to use
-                                -- single function that we can register
-                                -- or unregister as needed
-function max_line_length(file, path)
+local global_max_line_length = 80     -- This is ugly, but we do want to use
+                                      -- single function that we can register
+                                      -- or unregister as needed
+local function max_line_length(file, path)
   if not edconf_hooks_enabled then return end
   local overlong_lines = {}
   for i=1, #file.lines do
@@ -101,7 +101,7 @@ function max_line_length(file, path)
   end
 end
 
-OPTIONS = {
+local OPTIONS = {
   indent_style = function (value)
     vis_set("expandtab", (value == "space"))
   end,
@@ -165,7 +165,7 @@ OPTIONS = {
 }
 
 -- Compatible with editorconfig-core-lua v0.3.0
-function ec_iter(p)
+local function ec_iter(p)
   local i = 0
   local props, keys = ec.parse(p)
   local n = #keys
@@ -177,7 +177,7 @@ function ec_iter(p)
   end
 end
 
-function ec_set_values(file)
+local function ec_set_values(file)
   if file.path then
     for name, value in ec_iter(file.path) do
       if OPTIONS[name] then
@@ -187,7 +187,7 @@ function ec_set_values(file)
   end
 end
 
-function ec_parse_cmd() ec_set_values(vis.win.file) end
+local function ec_parse_cmd() ec_set_values(vis.win.file) end
 vis:command_register("econfig_parse", ec_parse_cmd, "(Re)parse an editorconfig file")
 
 vis.events.subscribe(vis.events.FILE_OPEN, function (file)
