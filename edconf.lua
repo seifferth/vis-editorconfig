@@ -200,8 +200,4 @@ vis.events.subscribe(vis.events.FILE_OPEN, function (file)
   ec_set_values(file)
 end)
 
-vis.events.subscribe(vis.events.FILE_SAVE_POST, function (file)
-  ec_set_values(file)
-end)
-
 return M
