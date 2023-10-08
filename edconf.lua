@@ -193,8 +193,9 @@ local function ec_set_values(file)
   end
 end
 
-local function ec_parse_cmd() ec_set_values(vis.win.file) end
-vis:command_register("econfig_parse", ec_parse_cmd, "(Re)parse an editorconfig file")
+vis:command_register("econfig_parse", function()
+  ec_set_values(vis.win.file)
+end, "(Re)parse an editorconfig file")
 
 vis.events.subscribe(vis.events.FILE_OPEN, function (file)
   ec_set_values(file)
