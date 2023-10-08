@@ -183,22 +183,22 @@ local function ec_iter(p)
   end
 end
 
-local function ec_set_values(file)
-  if file.path then
-    for name, value in ec_iter(file.path) do
-      if OPTIONS[name] then
-        OPTIONS[name](value, file)
-      end
+local function ec_set_values(win)
+  if not win or not win.file or not win.file.path then return end
+  for name, value in ec_iter(win.file.path) do
+    if OPTIONS[name] then
+      OPTIONS[name](value, win.file)
     end
   end
 end
 
+
 vis:command_register("econfig_parse", function()
-  ec_set_values(vis.win.file)
+  ec_set_values(vis.win)
 end, "(Re)parse an editorconfig file")
 
-vis.events.subscribe(vis.events.FILE_OPEN, function (file)
-  ec_set_values(file)
+vis.events.subscribe(vis.events.WIN_OPEN, function (win)
+  ec_set_values(win)
 end)
 
 return M
