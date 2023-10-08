@@ -201,4 +201,8 @@ vis.events.subscribe(vis.events.WIN_OPEN, function (win)
   ec_set_values(win)
 end)
 
+vis.events.subscribe(vis.events.FILE_SAVE_POST, function()
+  ec_set_values(vis.win)
+end)
+
 return M
