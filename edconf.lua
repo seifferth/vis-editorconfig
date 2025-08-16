@@ -1,4 +1,5 @@
--- Copyright 2019-2023 Frank Seifferth
+-- Copyright 2018-2019 Samadi van Koten
+-- Copyright 2019-2025 Frank Seifferth
 -- Copyright 2021-2023 Florian Fischer
 -- Copyright 2025 Matěj Cepl
 
