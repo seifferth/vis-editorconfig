@@ -50,9 +50,9 @@ local function set_file_open(f, value)
 end
 
 -- Custom functionality
-M.hooks_enabled = false
+M.enable_hooks = false
 vis:option_register("edconfhooks", "bool", function(value)
-  M.hooks_enabled = value
+  M.enable_hooks = value
 end, "Enable optional pre-save-hooks for certain editorconfig settings")
 
 local function insert_final_newline(file)
@@ -76,7 +76,7 @@ local function strip_final_newline(file)
 end
 
 local function trim_trailing_whitespace(file)
-  if not M.hooks_enabled then return end
+  if not M.enable_hooks then return end
   for i=1, #file.lines do
     if string.match(file.lines[i], '[ \t]$') then
       file.lines[i] = string.gsub(file.lines[i], '[ \t]*$', '')
@@ -85,7 +85,7 @@ local function trim_trailing_whitespace(file)
 end
 
 local function enforce_crlf_eol(file)
-  if not M.hooks_enabled then return end
+  if not M.enable_hooks then return end
   for i=1, #file.lines do
     if not string.match(file.lines[i], '\r$') then
       file.lines[i] = string.gsub(file.lines[i], '$', '\r')
@@ -94,7 +94,7 @@ local function enforce_crlf_eol(file)
 end
 
 local function enforce_lf_eol(file)
-  if not M.hooks_enabled then return end
+  if not M.enable_hooks then return end
   for i=1, #file.lines do
     if string.match(file.lines[i], '\r$') then
       file.lines[i] = string.gsub(file.lines[i], '\r$', '')
@@ -106,7 +106,7 @@ M.max_line_length = 80     -- This is ugly, but we do want to use
                            -- single function that we can register
                            -- or unregister as needed
 local function max_line_length(file)
-  if not M.hooks_enabled then return end
+  if not M.enable_hooks then return end
   local overlong_lines = {}
   for i=1, #file.lines do
     if string.len(file.lines[i]) > M.max_line_length then

@@ -67,24 +67,12 @@ as a pre-save-hook with a complexity of O(n), where n is the filesize.
 Since vis is incredibly good at editing huge files efficiently, there
 seems to be a very real danger that those hooks could cause the editor
 to freeze just before a user's valuable changes are written to disk.
+If hooks are enabled, they will be executed as configured in the relevant
+`.editorconfig` files. If you want to use a less cautious approach and
+enable these hooks by default, you can load the plugin like this:
 
-You can turn support for those pre-save-hooks on or off at any time
-by running
-
-    :set edconfhooks on
-
-or
-
-    :set edconfhooks off
-
-If `edconfhooks` are enabled, they will be executed as configured in
-`.editorconfig`. If you want to take a less cautious approach and enable
-these hooks by default, simply add an additional line below the module
-import in `visrc.lua`:
-
-    require('editorconfig/edconf')
-    vis:command('set edconfhooks on')   -- supposing you did previously
-                                        -- require('vis')
+    edconf = require('edconf')
+    edconf.enable_hooks = true
 
 ## License
 
