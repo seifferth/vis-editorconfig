@@ -186,6 +186,23 @@ local OPTIONS = {
   -- Partial support
   --   end_of_line
   --   max_line_length
+
+  -- What follows is non-standard functionality supported by this plugin
+  -- but not defined in the editorconfig standard. To enable these
+  -- functions, set 'module.enable_non_standard.function_name = true'
+  -- after loading this module as 'module = require("editorconfig")'
+  --
+  -- To activate the x_spelling_enable function, for instance, you
+  -- would use 'module.enable_non_standard.x_spelling_enable = true'
+  x_spelling_enable = function(value, file)
+    if not M.enable_non_standard.x_spelling_enable then return end
+    file.spelling_enable = value
+    vis:info("setting " .. value)
+  end,
+}
+
+M.enable_non_standard = {
+  x_spelling_enable = false,
 }
 
 -- Compatible with editorconfig-core-lua v0.3.0

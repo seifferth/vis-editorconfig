@@ -74,6 +74,27 @@ enable these hooks by default, you can load the plugin like this:
     edconf = require('edconf')
     edconf.enable_hooks = true
 
+## Non-standard properties
+
+In addition to the properties listed above, this plugin also provides
+optional support for the following non-standard extension of the
+editorconfig standard:
+
+- x_spelling_enable: Similar to how the `spelling_language` property
+  causes `vis.win.file.spelling_language` to be set, this property causes
+  `vis.win.file.spelling_enable` to be set. Note that this property is
+  a non-standard extension intended for personal use only. In order to
+  keep things clean, `.editorconfig` files using this property should
+  not be shared and should not be committed to revision control systems.
+
+All non-standard extensions are disabled by default and will be ignored
+by this plugin. In order to enable support for a non-standard property
+like `x_spelling_enable`, the user must explicitly enable that property
+when loading the plugin. This can be done as follows:
+
+    edconf = require('edconf')
+    edconf.enable_non_standard.x_spelling_enable = true
+
 ## License
 
 This project is licensed under the terms of the Apache License
