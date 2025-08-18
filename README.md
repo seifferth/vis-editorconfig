@@ -85,3 +85,9 @@ import in `visrc.lua`:
     require('editorconfig/edconf')
     vis:command('set edconfhooks on')   -- supposing you did previously
                                         -- require('vis')
+
+## License
+
+This project is licensed under the terms of the Apache License
+Version 2.0. A copy of that license is included in this repository
+as `LICENSES/Apache-2.0.txt`.
