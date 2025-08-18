@@ -37,7 +37,7 @@ The following settings are implemented partially and / or support is
 turned off by default:
 
 - spelling_language: Since vis does not support spellchecking
-  natively, this plugin will only set `vis.win.file.spell_language`
+  natively, this plugin will only set `vis.win.file.spelling_language`
   to the specified value. It is then up to the spellchecking plugin
   to respect that variable.
 - trim_trailing_whitespace: Turned off by default, can be enabled
